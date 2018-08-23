@@ -12,15 +12,19 @@ model = keras.models.Sequential({
 	keras.layers.Flatten(),
 	keras.layers.Dense(512, activation='relu'),
 	keras.layers.Dropout(0.25),
-	keras.layers.Dense(128, activation='relu', kernel_regularizer=keras.regularizers.l2(0.01)),
+	keras.layers.Dense(128, activation='relu'),
+	#keras.layers.Dropout(0.2),
+	#keras.layers.Dense(128, activation='relu'),
 	keras.layers.Dense(10, activation='softmax')
 })
 
-model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+earlyStop = keras.callbacks.EarlyStopping(min_delta=0.001, patience=2)
 
-history = model.fit(x_train, y_train, epochs=50, batch_size=4, validation_data=(x_test, y_test))
+model.compile(optimizer=keras.optimizers.Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-test_loss, test_acc = model.evaluate(x_test,y_test, batch_size=4)
+history = model.fit(x_train, y_train, epochs=10, validation_data=(x_test, y_test), callbacks=[earlyStop])
+
+test_loss, test_acc = model.evaluate(x_test,y_test)
 
 #model.save('C:\\TensorFlow\\nnMnist.h5')
 

@@ -23,10 +23,10 @@ model.add(keras.layers.Conv2D(32,(3,3), activation='relu'))
 model.add(keras.layers.MaxPooling2D(pool_size=(2,2), strides=(2,2)))
 model.add(keras.layers.Dropout(0.25))
 
-# model.add(keras.layers.Conv2D(64,(3,3), padding='same', activation='relu'))
-# model.add(keras.layers.Conv2D(64,(3,3), activation='relu'))
-# model.add(keras.layers.MaxPooling2D(pool_size=(2,2), strides=(2,2)))
-# model.add(keras.layers.Dropout(0.25))
+model.add(keras.layers.Conv2D(64,(3,3), padding='same', activation='relu'))
+model.add(keras.layers.Conv2D(64,(3,3), activation='relu'))
+model.add(keras.layers.MaxPooling2D(pool_size=(2,2), strides=(2,2)))
+model.add(keras.layers.Dropout(0.25))
 
 # model.add(keras.layers.Conv2D(64,(3,3), padding='same', activation='relu'))
 # model.add(keras.layers.Conv2D(64,(3,3), activation='relu'))
@@ -41,7 +41,7 @@ model.add(keras.layers.Dense(10, activation='softmax'))
 
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
-history = model.fit(x_train, y_train, epochs=10, batch_size=256, validation_data=(x_test, y_test))
+history = model.fit(x_train, y_train, epochs=5, batch_size=256, validation_data=(x_test, y_test))
 # history = model.fit_generator(datagen.flow(x_train, y_train, batch_size=256),
 #								steps_per_epoch = int(np.ceil(50000/float(256)))
 #								epochs=10, validation_data=(x_test, y_test))
@@ -60,6 +60,7 @@ plt.legend(['Training loss', 'Validation Loss'],fontsize=18)
 plt.xlabel('Epochs ',fontsize=16)
 plt.ylabel('Loss',fontsize=16)
 plt.title('Loss Curves',fontsize=16)
+plt.show()
  
 # Accuracy Curves
 plt.figure(figsize=[8,6])
@@ -69,3 +70,4 @@ plt.legend(['Training Accuracy', 'Validation Accuracy'],fontsize=18)
 plt.xlabel('Epochs ',fontsize=16)
 plt.ylabel('Accuracy',fontsize=16)
 plt.title('Accuracy Curves',fontsize=16)
+plt.show()
