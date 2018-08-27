@@ -2,19 +2,35 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow import keras
+import keras_metrics
 
 reuters = keras.datasets.reuters
-(x_train, y_train), (x_test, y_test) = reuters.load_data(num_words=1020, skip_top=20)
+(x_train, y_train), (x_test, y_test) = reuters.load_data(num_words=10000)
 
-for i in range(x_train.shape[0]):
-	x_train[i] = keras.utils.to_categorical(x_train[i])
+# onehot_x_train = tf.Variable(tf.zeros([x_train.shape[0], 1020]), tf.int32)
+# for i in range(x_train.shape[0]):
+# 	for j in x_train[i]:
+# 		onehot_x_train= onehot_x_train[i,j].assign(1)
 
-for i in range(x_test.shape[0]):
-	x_test[i] = keras.utils.to_categorical(x_train[i])
-y_train = keras.utils.to_categorical(y_train)
-y_test= keras.utils.to_categorical(y_test)
+# onehot_x_test = tf.Variable(tf.zeroes([x_test.shape[0], 1020]), tf.int32)
+# for i in range(x_test.shape[0]):
+# 	for j in x_test[i]:
+# 		onehot_x_test = onehot_x_test[i,j].assign(1)
+
+# x_train = tf.convert_to_tensor(onehot_x_train, dtype=tf.int32)
+# x_test = tf.convert_to_tensor(onehot_x_test, dtype=tf.int32)
+# y_train = keras.utils.to_categorical(y_train)
+# y_test= keras.utils.to_categorical(y_test)
 word_index = reuters.get_word_index()
+word_index = {k:(v+3) for k,v in word_index.items()}
+word_index["<PAD>"] = 0
+word_index["<START>"] = 1
+word_index["<UNK>"] = 2
+word_index["<UNUSED>"] = 3
 
+train_data = keras.preprocessing.sequence.pad_sequences(x_train, value=word_index["<PAD>"], padding='post', maxlen=256)
+test_data = keras.preprocessing.sequence.pad_sequences(x_test, value=word_index["<PAD>"], padding='post', maxlen=256)
+print(train_data.shape)
 reverse_word_index = dict([(value,key) for (key,value) in word_index.items()])
 
 def decode_review(text):
@@ -22,20 +38,33 @@ def decode_review(text):
 
 def main():
 	model = keras.Sequential()
-	model.add(keras.layers.Dense(512, activation='relu'))
-	#model.add(keras.layers.Embedding(10000, 32))
-	#model.add(keras.layers.GlobalAveragePooling1D())
-	#model.add(keras.layers.Flatten())
 	#model.add(keras.layers.Dense(512, activation='relu'))
-	#model.add(keras.layers.Dropout(0.25))
+	model.add(keras.layers.Embedding(10000, 128, input_length=256))
+	model.add(keras.layers.MaxPooling1D())
+	model.add(keras.layers.Conv1D(64, 2, padding='same', activation='relu'))
+	model.add(keras.layers.MaxPooling1D())
+	model.add(keras.layers.Conv1D(32, 2, padding='same', activation='relu'))
+	model.add(keras.layers.MaxPooling1D())
+	#model.add(keras.layers.Flatten())
+	#model.add(keras.layers.Dropout(0.4))
+	#model.add(keras.layers.Embedding(1000, 32))
+	#model.add(keras.layers.GlobalAveragePooling1D())
+	model.add(keras.layers.Flatten())
+	#model.add(keras.layers.Dropout(0.4))
+	#model.add(keras.layers.Dense(512, activation='relu', kernel_regularizer=keras.regularizers.l2(0.01)))
+	#model.add(keras.layers.Dropout(0.4))
+	model.add(keras.layers.Dense(256, activation='relu'))
+	#model.add(keras.layers.Dropout(0.4))
 	model.add(keras.layers.Dense(128, activation='relu'))
-	model.add(keras.layers.Dense(46, activation='sigmoid'))
+	model.add(keras.layers.Dense(46, activation='softmax'))
 
-	#model.summary()
+	model.summary()
 
-	model.compile(optimizer=keras.optimizers.Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+	earlyStop = keras.callbacks.EarlyStopping(min_delta=0.001, patience=1)
 
-	history = model.fit(x_train, y_train, epochs=30, batch_size=512, validation_data=(x_test, y_test))
+	model.compile(optimizer=keras.optimizers.Adam(0.03), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+	history = model.fit(train_data, y_train, epochs=20, batch_size=256, validation_data=(test_data, y_test),callbacks=[earlyStop])
 
 	test_loss, test_acc = model.evaluate(test_data,y_test)
 
