@@ -17,6 +17,13 @@ http://karpathy.github.io/2015/05/21/rnn-effectiveness/
 https://colah.github.io/
 https://distill.pub/
 
+RNN
+https://gist.github.com/karpathy/d4dee566867f8291f086
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+https://github.com/keras-team/keras/blob/master/examples/lstm_text_generation.py
+https://machinelearningmastery.com/text-generation-lstm-recurrent-neural-networks-python-keras/
+https://chunml.github.io/ChunML.github.io/project/Creating-Text-Generator-Using-Recurrent-Neural-Network/
+
 https://medium.com/@ageitgey/quick-tip-speed-up-your-python-data-processing-scripts-with-process-pools-cf275350163a
 Use other processes for data
 import concurrent.features
