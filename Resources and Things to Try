@@ -1,15 +1,21 @@
 Scikit-learn
 Estimators
+TF-Hub
 
 
 Recurrent neural networks
 Convolution network models(resnet)
 Face recognition
+Object detection
 Unsupervised learning
 
 https://medium.com/@ageitgey/machine-learning-is-fun-part-4-modern-face-recognition-with-deep-learning-c3cffc121d78
 https://medium.com/@karpathy
 https://medium.com/@ageitgey
+https://github.com/tensorflow/models/tree/master/research/object_detection
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+https://colah.github.io/
+https://distill.pub/
 
 https://medium.com/@ageitgey/quick-tip-speed-up-your-python-data-processing-scripts-with-process-pools-cf275350163a
 Use other processes for data
