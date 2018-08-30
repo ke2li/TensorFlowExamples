@@ -2,7 +2,6 @@
 #Tweets taken from trumptwitterarchive.com/archive
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import LSTM, Dropout, Dense, Activation
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,7 +15,7 @@ import string
 #global variables
 SEQ_LENGTH = 80
 HIDDEN_DIM = 512
-LAYER_NUM = 2
+LAYER_NUM = 3
 
 #character level implementation
 file = open("RawTweets.txt", 'r', encoding='utf-8')
@@ -75,6 +74,8 @@ for i in range(LAYER_NUM -1):
 model.add(keras.layers.TimeDistributed(keras.layers.Dense(num_vocab)))
 model.add(keras.layers.Activation('softmax'))
 
+save_model = keras.callbacks.ModelCheckpoint("weights.{epoch:02d}-{val_loss:.2f}.hdf5")
+
 earlyStop = keras.callbacks.EarlyStopping(min_delta=0.001, patience=2)
 
 class Predictions(keras.callbacks.Callback):
@@ -99,7 +100,7 @@ class Predictions(keras.callbacks.Callback):
 model.compile(optimizer=keras.optimizers.RMSprop(), loss='categorical_crossentropy', metrics=['accuracy'])
 
 preds = Predictions()
-history = model.fit(x_train, y_train, epochs=200,batch_size=256, validation_data=(x_test, y_test), callbacks=[earlyStop, preds])
+history = model.fit(x_train, y_train, epochs=200,batch_size=256, validation_data=(x_test, y_test), callbacks=[earlyStop, preds, save_model])
 
 test_loss, test_acc = model.evaluate(x_test,y_test)
 #model.save('C:\\TensorFlow\\nnMnist.h5')
