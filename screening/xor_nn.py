@@ -1,6 +1,7 @@
 # import required modules
 import tensorflow as tf
 import time
+from tensorflow.python import debug as tf_debug
 
 # placeholders for input data
 x_ = tf.placeholder(tf.float32, shape=[4,2], name = 'x-input')
@@ -51,6 +52,8 @@ XOR_Y = [[0],[1],[1],[0]]			# truth table y values
 
 init = tf.global_variables_initializer()	#initialize variables
 sess = tf.Session()	# start session
+#debug wrapper
+sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 
 writer = tf.summary.FileWriter("./logs/xor_logs", sess.graph)	# save a graph of the model
 
