@@ -15,6 +15,7 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 from tensorflow.contrib.factorization import KMeans
+from tensorflow.python import debug as tf_debug
 
 # Ignore all GPUs, tf random forest does not benefit from it.
 import os
@@ -63,6 +64,8 @@ init_vars = tf.global_variables_initializer()
 
 # Start TensorFlow session
 sess = tf.Session()
+#debug wrapper
+sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 
 # Run the initializer
 sess.run(init_vars, feed_dict={X: full_data_x})

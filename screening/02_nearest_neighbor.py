@@ -32,11 +32,14 @@ import numpy as np
 import tensorflow as tf
 import requests
 from tensorflow.python.framework import ops
+from tensorflow.python import debug as tf_debug
 # clear the default graph
 ops.reset_default_graph()
 
 # creating the tensorflow session to run operations
 sess = tf.Session()
+#debug wrapper
+sess = tf_debug.LocalCLIDebugWrapperSession(sess)
 
 # url to load data from
 housing_url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.data'

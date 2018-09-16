@@ -35,7 +35,7 @@ with tf.name_scope("cost") as scope:
 # For better result with binary classifier, use cross entropy with a sigmoid
 #    cost = tf.nn.sigmoid_cross_entropy_with_logits(logits=Hypothesis, labels=y_)		#built in cost function for binary classification
 
-# A naïve direct implementation of the loss function
+# A naive direct implementation of the loss function
 #     n_instances = x_.get_shape().as_list()[0]
 #     cost = tf.reduce_sum(tf.pow(Hypothesis - y_, 2))/ n_instances	# similar to first suggested cost function
 

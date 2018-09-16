@@ -20,6 +20,7 @@ from __future__ import print_function
 #import necessary modules
 import numpy as np
 import tensorflow as tf
+from tensorflow.python import debug as tf_debug
 
 # logs all info instead of just printing
 tf.logging.set_verbosity(tf.logging.INFO)
@@ -133,6 +134,7 @@ def main(unused_argv):
   tensors_to_log = {"probabilities": "softmax_tensor"}
   logging_hook = tf.train.LoggingTensorHook(
       tensors=tensors_to_log, every_n_iter=50)  #prints probabilities every 50 iterations
+  debug_hook = tf_debug.LocalCLIDebugHook()
 
   train_input_fn = tf.estimator.inputs.numpy_input_fn(
       x={"x": train_data},
@@ -143,7 +145,7 @@ def main(unused_argv):
   mnist_classifier.train(
       input_fn=train_input_fn,
       steps=20000,
-      hooks=[logging_hook]) # train the model
+      hooks=[logging_hook, debug_hook]) # train the model
 
   # Evaluate the model and print results
   eval_input_fn = tf.estimator.inputs.numpy_input_fn(
@@ -151,7 +153,7 @@ def main(unused_argv):
       y=eval_labels,
       num_epochs=1,
       shuffle=False)        # input test data to evaluate model
-  eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn)
+  eval_results = mnist_classifier.evaluate(input_fn=eval_input_fn, hooks=[debug_hook])
   print(eval_results)     # print evaluation accuracy to ensure overfitting is not present
 
 # run main on start
